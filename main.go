@@ -52,6 +52,12 @@ func main() {
 	}
 	fmt.Println("Data saved to cache")
 
+	err = c.SetTTL(context.Background(), "62e75de5413043a5eea730f0", temp)
+	if err != nil {
+		fmt.Println("set error: ", err)
+	}
+	fmt.Println("Data saved to cache with TTL")
+
 	var res Model
 	err = c.Get(context.Background(), "62e75de5413043a5eea730f0", &res)
 
