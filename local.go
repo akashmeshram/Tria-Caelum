@@ -65,3 +65,41 @@ func (c *localCache) Get(ctx context.Context, key string, value interface{}) err
 func (c *localCache) Set(ctx context.Context, key string, value interface{}) error {
 	return c.SetTTL(ctx, cache.DefaultExpiration, key, value)
 }
+
+func (c *localCache) SetTTL(ctx context.Context, duration time.Duration, key string, value interface{}) error {
+	if value == nil {
+		return c.Delete(ctx, key)
+	}
+	err := c.db.Set(key, value, &store.Options{Expiration: duration})
+	if err != nil {
+		fmt.Println("Set error ", err)
+	}
+
+	return nil
+}
+
+func (c *localCache) Delete(ctx context.Context, key string) error {
+	c.db.Delete(key)
+	return nil
+}
+
+
+//SetTTL ...
+func (c *LocalBigCache) SetTTL(ctx context.Context, duration time.Duration, key string, value interface{}) error {
+	if value == nil {
+		return c.Delete(ctx, key)
+	}
+	data, err := json.Marshal(value)
+	if err != nil {
+		return err
+	}
+	return c.db.Set(key, data, &store.Options{
+		Expiration: duration,
+	})
+
+}
+
+//Delete ...
+func (c *LocalBigCache) Delete(ctx context.Context, key string) error {
+	return c.db.Delete(key)
+}
