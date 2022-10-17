@@ -63,5 +63,22 @@ func main() {
 
 	defer client.Disconnect(context.TODO())
 
+	database := client.Database("mongowatcher")
+	modelLayerWatch(context.TODO(), database, false, func() ChangeEventModelCallbackFunc {
+		return func(id string, optType OperationType, m *Model) {
+			err := c.Delete(context.TODO(), id)
+			if err == nil {
+				fmt.Println("Cache deleted for auth id=>", id)
+			} else {
+				fmt.Println("cache not found")
+			}
+		}
+	}())
+
+	if err != nil {
+		fmt.Println("Watch> Error =>", err)
+	}
+
+
 	
 }
