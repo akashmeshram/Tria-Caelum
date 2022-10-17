@@ -79,6 +79,6 @@ func main() {
 		fmt.Println("Watch> Error =>", err)
 	}
 
-
+	monitorRuntime()
 	
 }
